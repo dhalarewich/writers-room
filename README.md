@@ -91,7 +91,7 @@ Prerequisites: [Claude Code](https://claude.com/claude-code) and Node 20+.
 Add the plugin in Claude Code:
 
 ```
-/plugin marketplace add dhalarewich/claude-plugins
+/plugin marketplace add dhalarewich/plugins
 /plugin install writers-room@halarewich
 ```
 
