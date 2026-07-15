@@ -51,6 +51,10 @@ my-studio/
     edits/              # diffs of your hand-edits, captured at ship time
 ```
 
+<div align="center">
+<img src="assets/screenshots/board.png" alt="wr board — themed terminal render of the demo studio" width="720">
+</div>
+
 A card's stage **is** its folder — there is no second copy of the truth. Each card carries the working draft plus a `## Dossier`: positioning, rubric score, a per-claim fact table, the edit log, the voice-gate report, and a `Pulled` list showing exactly which vault files each stage consulted and why. The card is the whole handoff: no hidden state, no transcript archaeology. Retrieval is a table of contents you can read (`vault/INDEX.md`), wiki-links, and lexical search — no embeddings, fully auditable.
 
 Six agents, decomposed by *context boundary* rather than job title — a fresh context is spent only where anchoring is the failure mode:
@@ -122,7 +126,11 @@ The rhythm: `/feed` or `/muse` → review the scored ideas → move what you bel
 
 From the terminal, `wr` covers everything without a model: `wr board` (themed render), `wr studio` (full-screen TUI), `wr serve` (read-only web board — loads in Claude Code desktop's browser pane), `wr sweep <id>` (count the AI tells in any text), `wr check` (schema lint), `wr doctor` (onboarding state), `wr find` / `wr index` (vault search), `wr adopt` (turn stray notes into cards). A statusline script in `statusline/` shows live pipeline state.
 
-Try it with zero setup: `fixtures/demo-studio/` is a complete studio with a synthetic voice — `cd fixtures/demo-studio && wr studio`.
+Try it with zero setup: `fixtures/demo-studio/` is a complete studio with a synthetic voice — `cd fixtures/demo-studio && wr studio`. The same board in the read-only web view (`wr serve`, loads in Claude Code desktop's browser pane):
+
+<div align="center">
+<img src="assets/screenshots/web-board.png" alt="wr serve — the web board in the field-station theme" width="860">
+</div>
 
 ## The voice memory loop
 

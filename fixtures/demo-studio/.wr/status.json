@@ -3,13 +3,13 @@
   "counts": {
     "inbox": 3,
     "ideas": 2,
-    "approved": 0,
+    "approved": 1,
     "drafting": 1,
     "editing": 0,
-    "ready": 0,
-    "published": 0
+    "ready": 1,
+    "published": 1
   },
   "blocked": [],
-  "lastShipped": null,
-  "updated": "2026-07-12T03:49:16.904Z"
+  "lastShipped": "fn-0006",
+  "updated": "2026-07-15T18:07:51.059Z"
 }

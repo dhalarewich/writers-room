@@ -12,7 +12,8 @@ export const palette = {
 } as const;
 
 const useColor = (): boolean =>
-  process.stdout.isTTY === true && !process.env.NO_COLOR;
+  process.env.FORCE_COLOR != null ||
+  (process.stdout.isTTY === true && !process.env.NO_COLOR);
 
 function hexToAnsi(hex: string, background = false): string {
   const n = Number.parseInt(hex.slice(1), 16);
