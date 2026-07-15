@@ -83,13 +83,13 @@ Add the plugin in Claude Code:
 /plugin install writers-room@halarewich
 ```
 
-Then install the `wr` CLI (the deterministic substrate the agents drive):
+Then install the `wr` CLI — the deterministic substrate the agents drive:
 
 ```bash
-git clone https://github.com/dhalarewich/writers-room
-cd writers-room
-npm install && npm run build && npm link
+npm i -g @dhalarewich/writers-room
 ```
+
+`wr --help` lists the verbs. (To hack on the CLI itself, clone the repo and run `npm install && npm run build && npm link` instead.)
 
 ## Set up your first studio
 
@@ -112,6 +112,27 @@ It takes 15–20 minutes and is fully resumable — **`wr doctor`** shows what's
 
 ## Daily use
 
+**The board flows left to right.** Every card starts in `0-inbox` and moves one column rightward until it ships. Your whole job is deciding what advances.
+
+```
+inbox → ideas →│ approved → drafting → editing → ready │→ published
+               ▲                                        ▲
+          your call:                              your call:
+        "worth drafting"                          "publish it"
+```
+
+**Two of those arrows are yours alone.** Everything *between* them the pipeline drives — `/write` runs a card from `approved` through the three gates to `ready` on its own. But the two human gates never move without you: promoting `ideas → approved` ("this is worth drafting") and `ready → published` ("publish this"). `/write --auto` can cross the first when a score clears your threshold; nothing automated ever crosses the second.
+
+**Moving a card is its own small act** — separate from the work a stage does. Three ways, whichever's in reach:
+
+| To move a card | Do this | When |
+|---|---|---|
+| **Just ask Claude** | "move ms-7 to approved" | you're in a Claude Code session |
+| **Terminal** | `wr move ms-7 approved` | you're in the shell |
+| **Drag the file** | drag its `.md` between `board/` folders in Finder, or on the web board | you're looking at the board |
+
+All three do the same thing: the card's `.md` file physically moves from one `board/` folder to the next. The folder **is** the stage — there's no other state to touch.
+
 Five verbs in Claude Code:
 
 | Command | What it does |
@@ -122,7 +143,7 @@ Five verbs in Claude Code:
 | `/ship` | your publish gate. Recaps gates and the Editor's bet, runs `wr ship` — which diffs the agent-final text against what you actually shipped. `--analytics` logs performance later |
 | `/learn` | closes the loop: classifies your pushback, re-runs the one responsible stage, and mines your ship-time edit diffs into rules (each citing its diff as evidence) |
 
-The rhythm: `/feed` or `/muse` → review the scored ideas → move what you believe in to `2-approved/` (drag the file, or `wr move`) → `/write` → edit the piece in `5-ready/` with your own hands → `/ship` → `/learn` when you've corrected something.
+The rhythm: `/feed` or `/muse` → review the scored ideas → move what you believe in to `2-approved/` → `/write` → edit the piece in `5-ready/` with your own hands → `/ship` → `/learn` when you've corrected something.
 
 From the terminal, `wr` covers everything without a model: `wr board` (themed render), `wr studio` (full-screen TUI), `wr serve` (read-only web board — loads in Claude Code desktop's browser pane), `wr sweep <id>` (count the AI tells in any text), `wr check` (schema lint), `wr doctor` (onboarding state), `wr find` / `wr index` (vault search), `wr adopt` (turn stray notes into cards). A statusline script in `statusline/` shows live pipeline state.
 

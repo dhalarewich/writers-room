@@ -1,11 +1,21 @@
 {
-  "name": "writers-room",
-  "version": "1.0.0-alpha.3",
+  "name": "@dhalarewich/writers-room",
+  "version": "1.0.0-alpha.4",
   "description": "A local-first editorial studio for one distinctive voice",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhalarewich/writers-room.git"
+  },
   "bin": {
-    "wr": "./dist/cli/main.js"
+    "wr": "dist/cli/main.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "engines": {
     "node": ">=20"
@@ -13,7 +23,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
-    "dev": "tsx src/cli/main.ts"
+    "dev": "tsx src/cli/main.ts",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "ink": "^5.2.1",
