@@ -1,6 +1,37 @@
-# Writers Room
+<div align="center">
 
-A local-first editorial studio for one distinctive voice. A Claude Code plugin plus a small CLI, running entirely on your filesystem — no server, no database, no API keys, nothing to deploy.
+<pre>
+██     ██ ██████  ██ ████████ ███████ ██████  ███████
+██     ██ ██   ██ ██    ██    ██      ██   ██ ██
+██  █  ██ ██████  ██    ██    █████   ██████  ███████
+██ ███ ██ ██   ██ ██    ██    ██      ██   ██      ██
+ ███ ███  ██   ██ ██    ██    ███████ ██   ██ ███████
+
+             ██████   ██████   ██████  ███    ███
+             ██   ██ ██    ██ ██    ██ ████  ████
+             ██████  ██    ██ ██    ██ ██ ████ ██
+             ██   ██ ██    ██ ██    ██ ██  ██  ██
+             ██   ██  ██████   ██████  ██      ██
+
+The local-first editorial studio for one distinctive voice
+</pre>
+
+**Filesystem board · evidence-quoted voice spec · gates instead of a humanizer · memory mined from your own edits**
+
+[![tests](https://img.shields.io/badge/tests-64%20passing-4c9a52)](#the-eval)
+[![node](https://img.shields.io/badge/node-%3E%3D20-6aa84f)](package.json)
+[![version](https://img.shields.io/badge/version-1.0.0--alpha.1-c47a3d)](https://github.com/dhalarewich/writers-room/releases)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](#install)
+[![Codex](https://img.shields.io/badge/Codex-portable-8a7f70)](#hosts)
+[![license](https://img.shields.io/badge/license-MIT-3d7dc4)](LICENSE)
+
+[Install](#install) · [Set up](#set-up-your-first-studio) · [Daily use](#daily-use) · [Voice memory](#the-voice-memory-loop) · [Eval](#the-eval) · [Hosts](#hosts)
+
+</div>
+
+---
+
+A Claude Code plugin plus a small CLI, running entirely on your filesystem — no server, no database, no API keys, nothing to deploy.
 
 The board is folders. The cards are markdown. The voice spec is distilled from pieces you actually published, with every rule quoting its evidence. Mechanical AI tells are counted by code, not vibes. And every hand-edit you make before publishing is captured as a diff and mined back into memory — the system gets more *you* every time you correct it.
 
@@ -32,7 +63,7 @@ my-studio/
     edits/              # diffs of your hand-edits, captured at ship time
 ```
 
-A card's stage **is** its folder — there is no second copy of the truth. Each card carries the working draft plus a `## Dossier`: positioning, rubric score, a per-claim fact table, the edit log, the voice-gate report, and a `Pulled` list showing exactly which vault files each stage consulted and why. Retrieval is a table of contents you can read (`vault/INDEX.md`), wiki-links, and lexical search — no embeddings, fully auditable.
+A card's stage **is** its folder — there is no second copy of the truth. Each card carries the working draft plus a `## Dossier`: positioning, rubric score, a per-claim fact table, the edit log, the voice-gate report, and a `Pulled` list showing exactly which vault files each stage consulted and why. The card is the whole handoff: no hidden state, no transcript archaeology. Retrieval is a table of contents you can read (`vault/INDEX.md`), wiki-links, and lexical search — no embeddings, fully auditable.
 
 Six agents, decomposed by *context boundary* rather than job title — a fresh context is spent only where anchoring is the failure mode:
 
@@ -53,20 +84,20 @@ Every piece passes three gates before it reaches `5-ready/`: facts, critique, vo
 
 Prerequisites: [Claude Code](https://claude.com/claude-code) and Node 20+.
 
+Add the plugin in Claude Code:
+
+```
+/plugin marketplace add dhalarewich/claude-plugins
+/plugin install writers-room@halarewich
+```
+
+Then install the `wr` CLI (the deterministic substrate the agents drive):
+
 ```bash
 git clone https://github.com/dhalarewich/writers-room
 cd writers-room
-npm install && npm run build && npm link    # installs the `wr` CLI
+npm install && npm run build && npm link
 ```
-
-Then add the plugin in Claude Code:
-
-```
-/plugin marketplace add dhalarewich/writers-room-marketplace
-/plugin install writers-room@writers-room-marketplace
-```
-
-(Or point Claude Code at the local `plugin/` folder while developing.)
 
 ## Set up your first studio
 
@@ -101,7 +132,7 @@ Five verbs in Claude Code:
 
 The rhythm: `/feed` or `/muse` → review the scored ideas → move what you believe in to `2-approved/` (drag the file, or `wr move`) → `/write` → edit the piece in `5-ready/` with your own hands → `/ship` → `/learn` when you've corrected something.
 
-From the terminal, `wr` covers everything without a model: `wr board` (themed render), `wr studio` (full-screen TUI), `wr serve` (read-only web board — loads in Claude Code desktop's browser pane), `wr sweep <id>` (count the AI tells in any text), `wr check` (schema lint), `wr find` / `wr index` (vault search), `wr adopt` (turn stray notes into cards). A statusline script in `plugin/statusline/` shows live pipeline state.
+From the terminal, `wr` covers everything without a model: `wr board` (themed render), `wr studio` (full-screen TUI), `wr serve` (read-only web board — loads in Claude Code desktop's browser pane), `wr sweep <id>` (count the AI tells in any text), `wr check` (schema lint), `wr doctor` (onboarding state), `wr find` / `wr index` (vault search), `wr adopt` (turn stray notes into cards). A statusline script in `statusline/` shows live pipeline state.
 
 Try it with zero setup: `fixtures/demo-studio/` is a complete studio with a synthetic voice — `cd fixtures/demo-studio && wr studio`.
 
@@ -119,9 +150,9 @@ The six-context lineup is a hypothesis, not a belief. `wr eval` runs seed cards 
 
 ## Hosts
 
-Built as a **Claude Code** plugin today. The substrate is deliberately host-agnostic: the board, vault, and memory are plain markdown operated through the `wr` CLI, and every agent behavior is a markdown instruction file — nothing in the working system depends on a specific model host except the thin packaging in `plugin/`.
+Built as a **Claude Code** plugin today. The substrate is deliberately host-agnostic: the board, vault, and memory are plain markdown operated through the `wr` CLI, and every agent behavior is a markdown instruction file — nothing in the working system depends on a specific model host except the thin packaging (`.claude-plugin/`, `skills/`, `commands/`, `agents/`).
 
-Porting to **Codex** (or any CLI agent) means: an AGENTS.md router mirroring `plugin/skills/writers-room/SKILL.md`, custom prompts mirroring `plugin/commands/`, and running the pipeline stages as separate headless CLI calls instead of subagents — a pattern the eval harness already uses (each stage is an isolated call with a file-assembled prompt, which preserves the fresh-context property the gates depend on). The eval runner's engine binary is overridable via `WR_ENGINE`. Contributions welcome.
+Porting to **Codex** (or any CLI agent) means: an AGENTS.md router mirroring `skills/writers-room/SKILL.md`, custom prompts mirroring `commands/`, and running the pipeline stages as separate headless CLI calls instead of subagents — a pattern the eval harness already uses (each stage is an isolated call with a file-assembled prompt, which preserves the fresh-context property the gates depend on). The eval runner's engine binary is overridable via `WR_ENGINE`. Contributions welcome.
 
 ## What this is not
 
