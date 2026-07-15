@@ -11,6 +11,8 @@ pillars: [pillar-one, pillar-two, pillar-three]
 thresholds:
   min_score: 72
   max_per_run: 6
+  # fold_ships: 3     # ships a rule must survive uncorrected before /learn --fold proposes graduating it
+  # ledger_max: 15    # active learnings rules before /learn proposes compacting the ledger
 
 # RSS feeds for /feed, grouped by topic. One URL per line.
 feeds: {}

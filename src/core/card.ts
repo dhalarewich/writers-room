@@ -132,6 +132,17 @@ export function createCard(
 
 const DOSSIER_HEADER = '## Dossier';
 
+// Mirrors pieceOnly's separator regex in sweep.ts — same split, kept in sync by hand.
+const DOSSIER_SPLIT = /\n(?:\*\*\*\n+)?## Dossier\b/;
+
+/** Swap everything before the Dossier for a fresh piece, leaving the separator and Dossier bytes untouched. */
+export function replacePiece(body: string, piece: string): string {
+  const match = DOSSIER_SPLIT.exec(body);
+  if (!match) return piece;
+  const normalized = piece.replace(/\n+$/, '') + '\n';
+  return normalized + body.slice(match.index);
+}
+
 export function appendSection(card: Card, heading: string, content: string): void {
   const section = `### ${heading}\n\n${content.trimEnd()}\n`;
   if (card.body.includes(section)) return;

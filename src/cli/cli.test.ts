@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -54,5 +54,16 @@ describe('wr end to end', () => {
     const result = wr(dir, 'adopt');
     expect(result.stdout).toContain('adopted raw-thought.txt');
     expect(wr(dir, 'board').stdout).toContain('A raw thought');
+  });
+});
+
+describe('wr capture', () => {
+  it('creates an inbox card from text with derived title', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'wr-capture-'));
+    wr(dir, 'init', '.', '--name', 'Capture Demo', '--prefix', 'cd');
+    const out = wr(dir, 'capture', 'Fuel math nobody does', '--studio', dir);
+    expect(out.code).toBe(0);
+    const inbox = readdirSync(join(dir, 'board', '0-inbox'));
+    expect(inbox.some((f) => f.includes('fuel-math-nobody-does'))).toBe(true);
   });
 });

@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { createCard, loadCard, saveCard, appendSection } from '../core/card.js';
+import { createCard, loadCard } from '../core/card.js';
 import { moveCard } from '../core/board.js';
 import { checkStudio } from '../core/check.js';
 import { doctorStudio } from '../core/doctor.js';
-import { captureShipDiff } from '../core/shipdiff.js';
-import { initStudio } from '../core/studio.js';
+import { shipCard } from '../core/shipdiff.js';
+import { deriveTitle, resolveCaptureStudio, writeDefaultStudio } from '../core/capture.js';
+import { findStudioRoot, initStudio, loadStudio } from '../core/studio.js';
 import { loadSweepConfig } from '../core/sweepconfig.js';
 import { pieceOnly, sweep } from '../core/sweep.js';
 import { writeStatus } from '../core/status.js';
@@ -25,6 +26,9 @@ const USAGE = `wr — the Writers Room studio tool
 
   wr init [dir] --name <name> --prefix <px>   create a studio
   wr new "<title>" [--stage s] [--channel c] [--pillar p] [--source s] [--body -]
+  wr capture "<text>" [--title t] [--source s] [--url u] [--studio path]
+                                              quick capture → inbox, from anywhere (stdin ok)
+  wr capture --set-default                    make this studio the capture target from anywhere
   wr move <id> <stage> [--force]              stages: ${STAGES.join(' ')}
   wr board [--json]                           render the board
   wr check [--json]                           lint the studio
@@ -36,7 +40,7 @@ const USAGE = `wr — the Writers Room studio tool
   wr ship <id>                                publish: capture edit diff, move to published
   wr adopt                                    convert stray notes in stage dirs into cards
   wr studio                                   full-screen TUI (board, peek, move)
-  wr serve [--port 4614]                      read-only web board (for the desktop browser pane)
+  wr serve [--port 4614]                      web board: drag to move, card pages, archive, ship
   wr eval run|score|merge|report|prompt …     the lineup eval
 `;
 
@@ -85,6 +89,60 @@ const verbs: Record<string, Verb> = {
       },
       stage,
       body,
+    );
+    writeStatus(studio);
+    console.log(`${card.meta.id}  ${card.path}`);
+    return 0;
+  },
+
+  capture(args) {
+    const { positional, flags } = parseFlags(args);
+    if (flags['set-default'] === true) {
+      const root = findStudioRoot(resolve(flagString(flags, 'studio') ?? process.cwd()));
+      if (!root) {
+        console.error('Not inside a studio — cd into one (or pass --studio <path>).');
+        return 1;
+      }
+      writeDefaultStudio(root);
+      console.log(paint(`◈ captures from anywhere now land in ${root}`, palette.copperBright));
+      return 0;
+    }
+    let text = positional.join(' ');
+    if (!text || text === '-') {
+      if (process.stdin.isTTY) {
+        console.error('usage: wr capture "<text>" [--title t] [--source s] [--url u] [--studio path]  (or pipe stdin)');
+        return 1;
+      }
+      text = readFileSync(0, 'utf8');
+    }
+    text = text.trim();
+    if (!text) {
+      console.error('nothing to capture');
+      return 1;
+    }
+    const root = resolveCaptureStudio({
+      flag: flagString(flags, 'studio'),
+      cwd: process.cwd(),
+      env: process.env.WR_STUDIO,
+    });
+    if (!root) {
+      console.error(
+        'No studio found: not in one, no --studio, no WR_STUDIO, no default.\nSet one: cd <studio> && wr capture --set-default',
+      );
+      return 1;
+    }
+    const studio = loadStudio(root);
+    const url = flagString(flags, 'url');
+    const explicitTitle = flagString(flags, 'title');
+    const derived = deriveTitle(text);
+    const title = explicitTitle ?? derived.title;
+    let body = explicitTitle ? text : derived.body;
+    if (url) body = body ? `${body}\n\n${url}` : url;
+    const card = createCard(
+      studio,
+      { title, source: flagString(flags, 'source') ?? (url ? `capture — ${url}` : 'capture — cli') },
+      'inbox',
+      body ? body + '\n' : '',
     );
     writeStatus(studio);
     console.log(`${card.meta.id}  ${card.path}`);
@@ -235,15 +293,14 @@ const verbs: Record<string, Verb> = {
       return 1;
     }
     const studio = requireStudio();
-    const card = loadCard(studio, id);
-    if (card.stage !== 'ready') {
-      console.error(`${id} is in ${card.stage}, not ready/ — move it there first (the operator's publish gate).`);
+    let changed: boolean;
+    let diffPath: string | null;
+    try {
+      ({ changed, diffPath } = shipCard(studio, id));
+    } catch (err) {
+      console.error(err instanceof Error ? err.message : String(err));
       return 1;
     }
-    const { changed, diffPath } = captureShipDiff(studio, id);
-    const moved = moveCard(studio, id, 'published');
-    appendSection(moved, 'Shipped', `${new Date().toISOString().slice(0, 10)} — operator edits after agent-final: ${changed ? `yes (${diffPath})` : 'none'}`);
-    saveCard(moved);
     writeStatus(studio);
     console.log(paint(`⇥ ${id} published`, palette.copperBright, { bold: true }));
     console.log(

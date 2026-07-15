@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { loadCard } from './card.js';
+import { moveCard } from './board.js';
+import { appendSection, loadCard, saveCard } from './card.js';
 import type { Card, Studio } from './types.js';
 
 function editsDir(studio: Studio): string {
@@ -85,4 +86,26 @@ export function captureShipDiff(
   const header = `# ${id} — operator edits after agent-final\n# captured ${new Date().toISOString()}\n`;
   writeFileSync(diffPath, header + compact(lineDiff(agentFinal, current)) + '\n');
   return { diffPath, changed: true };
+}
+
+/** Publish gate: ready/ → published/, capturing the operator's hand edits and logging them on the card. */
+export function shipCard(
+  studio: Studio,
+  id: string,
+): { changed: boolean; diffPath: string | null; card: Card } {
+  const card = loadCard(studio, id);
+  if (card.stage !== 'ready') {
+    throw new Error(
+      `${id} is in ${card.stage}, not ready/ — move it there first (the operator's publish gate).`,
+    );
+  }
+  const { changed, diffPath } = captureShipDiff(studio, id);
+  const moved = moveCard(studio, id, 'published');
+  appendSection(
+    moved,
+    'Shipped',
+    `${new Date().toISOString().slice(0, 10)} — operator edits after agent-final: ${changed ? `yes (${diffPath})` : 'none'}`,
+  );
+  saveCard(moved);
+  return { changed, diffPath, card: moved };
 }

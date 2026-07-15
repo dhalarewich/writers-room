@@ -8,6 +8,7 @@ import {
   loadCard,
   nextId,
   parseCard,
+  replacePiece,
   saveCard,
   serializeCard,
 } from './card.js';
@@ -88,6 +89,25 @@ describe('appendSection', () => {
     expect(card.body).toContain('## Dossier');
     expect(card.body.indexOf('### Positioning')).toBeLessThan(card.body.indexOf('### Score'));
     expect(card.body.match(/## Dossier/g)?.length).toBe(1);
+  });
+});
+
+describe('replacePiece', () => {
+  it('keeps a ***-separated Dossier byte-identical and swaps the piece', () => {
+    const body = 'Old piece.\n\n***\n\n## Dossier\n\nSome facts.\n';
+    const out = replacePiece(body, 'New piece.');
+    expect(out).toBe('New piece.\n\n***\n\n## Dossier\n\nSome facts.\n');
+  });
+
+  it('keeps a bare ## Dossier byte-identical and swaps the piece', () => {
+    const body = 'Old piece.\n\n## Dossier\n\nSome facts.\n';
+    const out = replacePiece(body, 'New piece.');
+    expect(out).toBe('New piece.\n\n## Dossier\n\nSome facts.\n');
+  });
+
+  it('returns just the new piece when there is no Dossier', () => {
+    const body = 'Just a note, no dossier here.\n';
+    expect(replacePiece(body, 'New piece.\n')).toBe('New piece.\n');
   });
 });
 

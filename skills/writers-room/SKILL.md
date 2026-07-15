@@ -55,7 +55,7 @@ Route by the operator's words first; by card stage when vague:
 6-published→ /ship --analytics or /learn for retrospectives
 ```
 
-Entry points: `/feed` (autonomous sources + provocations), `/muse` (dialogue — seed depth or all the way to a piece), or the operator just dropping files into `board/0-inbox/` (run `wr adopt`).
+Entry points: `/feed` (autonomous sources + provocations), `/muse` (dialogue — seed depth or all the way to a piece), the operator dropping files into `board/0-inbox/` (run `wr adopt`), or `wr capture` from any terminal (`wr capture --set-default` once makes a studio the from-anywhere target).
 
 ## Feedback discipline
 

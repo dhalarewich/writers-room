@@ -1,10 +1,19 @@
 ---
-description: "Stock the inbox from signal sources, then split and score. Usage: /feed [--rss --mine --gap --backlog --theme --kb --provoke] [--top N] [--skip-split]"
+description: "Stock the inbox from signal sources, then split and score. Usage: /feed [focus — plain words, e.g. 'just my feeds', 'find gaps', 'something provocative'] [--top N] [--skip-split]"
 ---
 
 # /feed — entry point: autonomous + provocation
 
 Keeps the inbox from ever being the reason nothing ships. Agent budget: 3 subagents.
+
+## Focus (plain words, not flags)
+
+The operator may pass a focus in plain language; map it to source modes yourself:
+"my feeds / rss" → rss · "what worked / winners" → mine · "gaps / neglected pillars" → gap ·
+"old ideas / backlog" → backlog · "themes / patterns" → theme · "my notes / knowledge" → kb ·
+"provocative / challenge me" → provoke. Legacy `--rss --mine --gap --backlog --theme --kb
+--provoke` flags still work as exact selectors. No focus at all = every viable source, which is
+the blessed default — the flags exist for repeat operators with a ritual, not for day one.
 
 ## Step 0
 

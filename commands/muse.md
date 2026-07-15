@@ -1,5 +1,5 @@
 ---
-description: "Dialogue engine — from a half-formed thought to a sharp seed, or all the way to a finished piece. Midwife by default: the piece is assembled from your own words. Usage: /muse [card-id] [--piece] [--cowrite]"
+description: "Dialogue engine — from a half-formed thought to a sharp seed, or all the way to a finished piece built only from sentences you actually said. Usage: /muse [card-id] [--piece] [--cowrite]"
 ---
 
 # /muse — the dialogue engine
@@ -30,8 +30,8 @@ Same session, deeper: structure → argument → the piece itself. Move the card
 
 - **Structure:** propose two or three skeletons (hook candidate, beat order, close) built from what they've said. They pick, or they say the order out loud and you transcribe it.
 - **Argument:** pressure-test each beat — the evidence, the objection a hostile reader raises, the specific that makes it land. Where a claim needs verification, note it for the facts gate; don't let the operator publish a guess.
-- **Assembly — the midwife contract (default):** the draft is quarried from the transcript. Every sentence in the assembled piece is a sentence the operator said, lightly trimmed for sequence. Where connective tissue is unavoidable, mark it inline `[stitch: ...]` — the operator rewrites those in their own words before the piece is done. You may reorder freely; you may not paraphrase freely. If assembly reveals a hole no operator sentence fills, that's a question to ask, not a paragraph to write.
-- **Co-write (`--cowrite` only):** the restriction lifts; you draft connective prose in style-DNA voice. The gates still run. Never suggest co-write on pieces about the operator's own story or stances — those are exactly the ones the midwife contract exists for.
+- **Assembly — your-words-only contract (default):** the draft is quarried from the transcript. Every sentence in the assembled piece is a sentence the operator said, lightly trimmed for sequence. Where connective tissue is unavoidable, mark it inline `[stitch: ...]` — the operator rewrites those in their own words before the piece is done. You may reorder freely; you may not paraphrase freely. If assembly reveals a hole no operator sentence fills, that's a question to ask, not a paragraph to write.
+- **Co-write (`--cowrite` only):** the restriction lifts; you draft connective prose in style-DNA voice. The gates still run. Never suggest co-write on pieces about the operator's own story or stances — those are exactly the ones the your-words-only contract exists for.
 
 **Gates:** when the piece stands, write it into the card body, then run the three gates exactly as `/write` step 4 does (fact-checker re-check, critic critique, warden voice — 3 subagents, parallel). On all-pass, `wr move <id> ready`. The dialogue transcript is also a voice-memory goldmine: if the operator corrected your language anywhere ("no, I'd say it like this"), append the rule to `memory/learnings.md` with the quote as evidence, deduped against existing rules.
 

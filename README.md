@@ -51,6 +51,19 @@ my-studio/
     edits/              # diffs of your hand-edits, captured at ship time
 ```
 
+**Five things worth naming before the rest makes sense.** **Channels** are where you publish — linkedin, blog, x, whatever `studio.yml` lists. **Pillars** are the 3–5 themes you actually own, strategy made countable: `/feed` hunts gaps per pillar, and the rubric scores how well a piece ladders back to one. **Vault** is ratified memory — the facts and rules you've signed off on: bio, strategy, rubric, style DNA, samples. Agents read it as truth, and it changes only on purpose, through `/setup`, a hand edit, or a graduation. **Memory** is provisional memory — the machine-written ledger, append-only, every rule citing the evidence, your words or your edit diffs, that produced it. Everything the system retains is memory; the provisional kind only earns its way into canon through evidence, time, and your sign-off — nothing drifts in silently.
+
+```
+   studio.yml
+   channels — where you publish       pillars — what you own (3–5 themes)
+   └ linkedin · x · longform          └ gear-truth · trail-craft · small-business
+
+                  every card = one pillar × one or more channels
+                                      │
+   vault/  ratified — canon           │        memory/  provisional — earns its way in
+   voice · bio · strategy ─────────► draft ◄───────── learnings · your edit diffs
+```
+
 <div align="center">
 <img src="assets/screenshots/board.png" alt="wr board — themed terminal render of the demo studio" width="720">
 </div>
@@ -68,7 +81,7 @@ Six agents, decomposed by *context boundary* rather than job title — a fresh c
 | Editor | density, hook, close; the Writer's designed adversary |
 | Warden | the voice gate: tool-counted de-slop sweep + fidelity verdict, always last |
 
-Plus the Muse, who lives in the main conversation: a Socratic interviewer that can stop at a sharp idea card, or midwife an entire piece assembled from *your own sentences* in the transcript.
+Plus the Muse, who lives in the main conversation: a Socratic interviewer that can stop at a sharp idea card, or keep going to a finished piece built only from sentences you actually said in the transcript.
 
 Every piece passes three gates before it reaches `5-ready/`: facts, critique, voice. Nothing ever auto-publishes — `5-ready → published` is yours alone.
 
@@ -110,6 +123,57 @@ It takes 15–20 minutes and is fully resumable — **`wr doctor`** shows what's
 
 **Second board?** Every folder is its own studio. `/setup --from ~/writing/first-studio` carries your voice (style DNA, bans, samples, bio) over in two minutes; pillars, strategy, and feeds stay per-board.
 
+## A week with it
+
+A walkthrough on the demo studio (`fixtures/demo-studio`, prefix `fn`) — the same board pictured above, played out over five days.
+
+**Monday, `/feed`.** It stocks the inbox from every viable source and hands back a ranked list:
+
+```
+fn-0004  Fuel-per-boil is the spec sheet lie          81  gear-truth
+  honest line: the canister log is the piece; without it this is a take
+fn-0005  Buy gear for the trips you take               64  trail-craft
+  honest line: needs the actual audit numbers to clear 72
+```
+
+You read both. `fn-0005` is short of the auto-promote threshold, but you've already run the trip-log audit it's asking for — worth drafting anyway, and that call is yours to make, not the score's:
+
+```
+wr move fn-0005 approved
+```
+
+**Tuesday, `/write fn-0005`.** It runs the fact brief, draft, and edit passes and closes with the report `/write` always gives — gate states plus the Editor's Bet, a falsifiable line about how the piece will land:
+
+```
+fn-0005  Buy gear for the trips you take → 5-ready/
+  gates: facts passed · critique passed · voice passed
+  Editor's Bet: comments beat shares here — this reads as confession, not advice
+```
+
+**Wednesday**, before anything ships, you open `board/5-ready/fn-0005-*.md` in your own editor and cut two sentences the Editor left in. Then `/ship fn-0005` — the recap, the one question that keeps the voice loop alive, and the result:
+
+```
+Buy gear for the trips you take · linkedin · facts/critique/voice: passed
+Editor's Bet: comments beat shares here — this reads as confession, not advice
+
+Is the card text exactly what went (or is going) live? Paste the final
+version, or say `as-is`.
+> as-is
+
+⇥ fn-0005 published
+  hand edits captured → memory/edits/fn-0005.diff
+  run /learn to mine them into voice memory
+```
+
+Two hunks in that diff — the two sentences you cut.
+
+**Friday, `/learn`.** It mines the diff and appends a rule, evidence attached — the same append-only ledger `memory/learnings.md` already holds entries like this in:
+
+```
+1 diff mined, 1 rule appended:
+"Cut the hedge before the numbers — the confession lands harder cold."
+```
+
 ## Daily use
 
 **The board flows left to right.** Every card starts in `0-inbox` and moves one column rightward until it ships. Your whole job is deciding what advances.
@@ -137,7 +201,7 @@ Five verbs in Claude Code:
 
 | Command | What it does |
 |---|---|
-| `/feed` | stocks the inbox: your published winners, RSS, pillar gaps, stale backlog, theme clusters, dormant knowledge — plus one *provocation* (a real tension between things you've said) |
+| `/feed` | stocks the inbox — all viable sources by default, or focus it in plain words ("just my feeds", "find gaps", "something provocative"). Sources: your published winners, RSS, pillar gaps, stale backlog, theme clusters, dormant knowledge — plus one *provocation* (a real tension between things you've said) |
 | `/muse` | dialogue engine. Seed depth: digs out what you actually think, leaves a sharp card. Piece depth: keeps going through structure and argument to a finished piece assembled from your own words (`--cowrite` to let it write connective prose) |
 | `/write` | pipeline engine: fact brief → draft → edit → three gates → `5-ready/`. Single card, batch, `--auto` (score-threshold promotion), or `--table` (round-table treatment for high-stakes pieces) |
 | `/ship` | your publish gate. Recaps gates and the Editor's bet, runs `wr ship` — which diffs the agent-final text against what you actually shipped. `--analytics` logs performance later |
@@ -145,13 +209,47 @@ Five verbs in Claude Code:
 
 The rhythm: `/feed` or `/muse` → review the scored ideas → move what you believe in to `2-approved/` → `/write` → edit the piece in `5-ready/` with your own hands → `/ship` → `/learn` when you've corrected something.
 
-From the terminal, `wr` covers everything without a model: `wr board` (themed render), `wr studio` (full-screen TUI), `wr serve` (read-only web board — loads in Claude Code desktop's browser pane), `wr sweep <id>` (count the AI tells in any text), `wr check` (schema lint), `wr doctor` (onboarding state), `wr find` / `wr index` (vault search), `wr adopt` (turn stray notes into cards). A statusline script in `statusline/` shows live pipeline state.
+From the terminal, `wr` covers everything without a model: `wr capture "thought"` (quick capture to inbox from anywhere; `--set-default` once to make a studio the target), `wr board` (themed render), `wr studio` (full-screen TUI), `wr serve` (web board — drag cards between stages, open a card, archive, ship with paste-back; loads in Claude Code desktop's browser pane), `wr sweep <id>` (count the AI tells in any text), `wr check` (schema lint), `wr doctor` (onboarding state), `wr find` / `wr index` (vault search), `wr adopt` (turn stray notes into cards). A statusline script in `statusline/` shows live pipeline state.
 
-Try it with zero setup: `fixtures/demo-studio/` is a complete studio with a synthetic voice — `cd fixtures/demo-studio && wr studio`. The same board in the read-only web view (`wr serve`, loads in Claude Code desktop's browser pane):
+Try it with zero setup: `fixtures/demo-studio/` is a complete studio with a synthetic voice — `cd fixtures/demo-studio && wr studio`. The same board in the web view (`wr serve`, loads in Claude Code desktop's browser pane):
 
 <div align="center">
 <img src="assets/screenshots/web-board.png" alt="wr serve — the web board in the field-station theme" width="860">
 </div>
+
+## Getting things in
+
+Capture has to be instant and judgment-free — no positioning, no scoring, no deciding if it's good. That thinking happens later, at the `/feed` split. Right now the only job is not losing the thought.
+
+```bash
+wr capture "fuel math nobody does"
+```
+
+Run it once inside a studio with `--set-default` and captures from anywhere land there, no `cd` required:
+
+```bash
+wr capture --set-default
+```
+
+It reads stdin too, so anything that can pipe text can capture:
+
+```bash
+pbpaste | wr capture -
+```
+
+`--url` appends a link as its own trailing paragraph, so a capture keeps its source:
+
+```bash
+wr capture "the repair math cuts both ways" --url https://example.com/thread
+```
+
+A few ways to make capture instant on whatever you carry:
+
+- **macOS Shortcut or share sheet** — a shortcut that pipes selected text or a URL into a `wr capture` shell action, callable from anywhere the share sheet shows up.
+- **Raycast script command** — bind a hotkey to a script that shells out to `wr capture "$1"`.
+- **Phone** — sync the studio folder (iCloud Drive, Syncthing) and save `.md` files into `board/0-inbox/` from any notes app; `/feed` adopts and splits them like anything else.
+
+Anything that writes a file is a capture client. No account, no API, no server.
 
 ## The voice memory loop
 

@@ -2,9 +2,9 @@ import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { boardCounts, listCards, moveCard } from './board.js';
+import { archiveCard, boardCounts, listCards, moveCard } from './board.js';
 import { createCard, loadCard, saveCard } from './card.js';
-import { captureShipDiff } from './shipdiff.js';
+import { captureShipDiff, shipCard } from './shipdiff.js';
 import { initStudio } from './studio.js';
 
 function makeStudio() {
@@ -79,5 +79,46 @@ describe('captureShipDiff', () => {
     expect(diff).toContain('- cut this line');
     expect(diff).toContain('+ a better line');
     expect(diff).toContain('  keep one');
+  });
+});
+
+describe('archiveCard', () => {
+  it('moves the card file into board/archive and drops it from listCards', () => {
+    const studio = makeStudio();
+    const card = createCard(studio, { title: 'Archive me' }, 'ideas');
+    const newPath = archiveCard(studio, card.meta.id);
+    expect(existsSync(card.path)).toBe(false);
+    expect(newPath).toContain(join('board', 'archive'));
+    expect(existsSync(newPath)).toBe(true);
+    expect(listCards(studio)).toHaveLength(0);
+  });
+
+  it('refuses to archive a pinned card', () => {
+    const studio = makeStudio();
+    const card = createCard(studio, { title: 'Pinned', pinned: true });
+    expect(() => archiveCard(studio, card.meta.id)).toThrow(/pinned/);
+  });
+});
+
+describe('shipCard', () => {
+  it('moves a ready card to published, appends Shipped, reports unchanged with no snapshot edits', () => {
+    const studio = makeStudio();
+    const card = createCard(studio, { title: 'Ship me' }, 'editing', 'final text\n');
+    moveCard(studio, card.meta.id, 'ready');
+    const result = shipCard(studio, card.meta.id);
+    expect(result.changed).toBe(false);
+    expect(result.diffPath).toBeNull();
+    expect(result.card.stage).toBe('published');
+    expect(result.card.path).toContain('6-published');
+    expect(result.card.body).toContain('### Shipped');
+    expect(loadCard(studio, card.meta.id).stage).toBe('published');
+  });
+
+  it('throws when the card is not in ready', () => {
+    const studio = makeStudio();
+    const card = createCard(studio, { title: 'Too soon' }, 'editing');
+    expect(() => shipCard(studio, card.meta.id)).toThrow(
+      `${card.meta.id} is in editing, not ready/ — move it there first (the operator's publish gate).`,
+    );
   });
 });

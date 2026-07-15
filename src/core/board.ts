@@ -1,4 +1,4 @@
-import { readFileSync, renameSync } from 'node:fs';
+import { mkdirSync, readFileSync, renameSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { cardFiles, loadCard, parseCard, saveCard } from './card.js';
 import { snapshotForShip } from './shipdiff.js';
@@ -40,4 +40,16 @@ export function moveCard(
   saveCard(card);
   if (to === 'ready') snapshotForShip(studio, card);
   return card;
+}
+
+export function archiveCard(studio: Studio, id: string): string {
+  const card = loadCard(studio, id);
+  if (card.meta.pinned) {
+    throw new Error(`${id} is pinned — pass --force after the operator has approved the move`);
+  }
+  const dir = join(studio.root, 'board', 'archive');
+  mkdirSync(dir, { recursive: true });
+  const target = join(dir, basename(card.path));
+  renameSync(card.path, target);
+  return target;
 }

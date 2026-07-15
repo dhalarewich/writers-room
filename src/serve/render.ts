@@ -1,4 +1,5 @@
 import { listCards } from '../core/board.js';
+import { loadCard } from '../core/card.js';
 import { palette } from '../core/theme.js';
 import type { Card, Studio } from '../core/types.js';
 import { GATE_NAMES, STAGES } from '../core/types.js';
@@ -25,7 +26,7 @@ export function renderBoardHtml(studio: Studio): string {
         (c) => `
       <div class="card${c.meta.needs.length ? ' blocked' : ''}" draggable="true" data-id="${esc(c.meta.id)}">
         <div class="card-top"><span class="id">${esc(c.meta.id)}</span>${c.meta.score != null ? `<span class="score">${c.meta.score}</span>` : ''}<span class="gates">${gateDots(c)}</span></div>
-        <div class="title">${esc(c.meta.title)}${c.meta.pinned ? ' ⚲' : ''}</div>
+        <div class="title"><a href="/card/${esc(c.meta.id)}" draggable="false">${esc(c.meta.title)}</a>${c.meta.pinned ? ' ⚲' : ''}</div>
         <div class="meta">${esc(c.meta.channel.join(', ') || '')}${c.meta.pillar ? ` · ${esc(c.meta.pillar)}` : ''}${c.meta.needs.length ? ` · ⚠ ${esc(c.meta.needs.join(','))}` : ''}</div>
       </div>`,
       )
@@ -60,6 +61,8 @@ export function renderBoardHtml(studio: Studio): string {
   .gates { margin-left: auto; letter-spacing: .15em; }
   .ok { color: ${palette.ok}; } .block { color: ${palette.block}; } .dim { color: ${palette.dim}; }
   .title { margin-top: 4px; }
+  .title a { color: inherit; text-decoration: none; }
+  .title a:hover { text-decoration: underline; }
   .meta { color: ${palette.dim}; font-size: 11px; margin-top: 4px; }
   .empty { color: ${palette.dim}; text-align: center; padding: 12px 0; }
   .card { cursor: grab; }
@@ -104,6 +107,90 @@ for (const col of document.querySelectorAll('.column')) {
 }
 // Auto-refresh replaces the old meta-refresh, but never mid-drag.
 setInterval(() => { if (!dragging) location.reload(); }, 5000);
+</script>
+</body></html>`;
+}
+
+export function renderCardHtml(studio: Studio, id: string): string {
+  const card = loadCard(studio, id);
+  const shipBlock =
+    card.stage === 'ready'
+      ? `
+<div class="ship">
+  <h3>ship</h3>
+  <textarea id="finalText" placeholder="paste the final text as it went live — or leave empty to ship as-is"></textarea>
+  <button id="shipBtn">ship</button>
+</div>`
+      : '';
+
+  return `<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(card.meta.id)} — ${esc(studio.config.name)}</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: ${palette.bg}; color: ${palette.ink}; font: 13px/1.5 ui-monospace, "SF Mono", Menlo, monospace; padding: 24px; max-width: 760px; margin: 0 auto; }
+  a { color: ${palette.copper}; }
+  .back { display: inline-block; margin-bottom: 16px; color: ${palette.dim}; }
+  .head-line { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  h1 { color: ${palette.copperBright}; font-size: 16px; font-weight: 600; }
+  .stage { color: ${palette.dim}; }
+  .score { color: ${palette.warn}; font-weight: 600; }
+  .gates { letter-spacing: .15em; }
+  .ok { color: ${palette.ok}; } .block { color: ${palette.block}; } .dim { color: ${palette.dim}; }
+  .title { margin-top: 6px; font-size: 14px; }
+  .meta { color: ${palette.dim}; font-size: 11px; margin-top: 4px; }
+  .doc { white-space: pre-wrap; background: ${palette.panel}; border: 1px solid #2a251f; border-radius: 8px; padding: 14px; margin-top: 16px; }
+  .actions { margin-top: 16px; display: flex; gap: 10px; }
+  button { font: inherit; background: ${palette.panel}; color: ${palette.ink}; border: 1px solid #2a251f; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+  button:hover { border-color: ${palette.copperBright}; }
+  .ship { margin-top: 16px; }
+  .ship h3 { color: ${palette.copper}; font-size: 12px; text-transform: lowercase; letter-spacing: .06em; margin-bottom: 8px; }
+  textarea { width: 100%; min-height: 140px; background: ${palette.bg}; color: ${palette.ink}; border: 1px solid #2a251f; border-radius: 6px; padding: 10px; font: inherit; resize: vertical; }
+</style></head>
+<body data-id="${esc(card.meta.id)}">
+<a class="back" href="/">← board</a>
+<header>
+  <div class="head-line">
+    <h1>${esc(card.meta.id)}</h1>
+    <span class="stage">${esc(card.stage)}</span>
+    ${card.meta.score != null ? `<span class="score">${card.meta.score}</span>` : ''}
+    <span class="gates">${gateDots(card)}</span>
+  </div>
+  <div class="title">${esc(card.meta.title)}${card.meta.pinned ? ' ⚲' : ''}</div>
+  <div class="meta">${esc(card.meta.channel.join(', ') || '')}${card.meta.pillar ? ` · ${esc(card.meta.pillar)}` : ''}</div>
+</header>
+<pre class="doc">${esc(card.body)}</pre>
+<div class="actions">
+  <button id="archiveBtn">archive</button>
+</div>
+${shipBlock}
+<script>
+const id = document.body.dataset.id;
+document.getElementById('archiveBtn').addEventListener('click', async () => {
+  const res = await fetch('/archive', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ id }),
+  });
+  if (res.ok) location.href = '/';
+  else alert('archive failed: ' + (await res.text()));
+});
+const shipBtn = document.getElementById('shipBtn');
+if (shipBtn) {
+  shipBtn.addEventListener('click', async () => {
+    const finalText = document.getElementById('finalText').value.trim();
+    const payload = finalText ? { id, finalText } : { id };
+    const res = await fetch('/ship', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) location.href = '/';
+    else alert('ship failed: ' + (await res.text()));
+  });
+}
 </script>
 </body></html>`;
 }

@@ -1,12 +1,12 @@
 ---
-description: "Open the read-only web board in a browser. Usage: /board [--port 4614]"
+description: "Open the web board in a browser. Usage: /board [--port 4614]"
 ---
 
 # /board — the wall
 
 Agent budget: 0 subagents. This is ceremony around `wr serve`; keep it fast.
 
-The board is a read-only web view of the studio — columns by stage, cards with scores and gate dots, refreshes every 5s. Good as the first thing up when a session starts.
+The board is a web view of the studio — columns by stage, cards with scores and gate dots, auto-refreshing. Drag a card to move it; click a title for the full card, where archive and (on ready cards) ship-with-paste-back live. Drags into published are refused — shipping keeps its ceremony. Good as the first thing up when a session starts.
 
 1. Pick the port: `--port N` if given, else `4614`.
 2. If something already answers on that port (`curl -sf -o /dev/null http://localhost:PORT`), skip straight to step 4 — a board is already up.

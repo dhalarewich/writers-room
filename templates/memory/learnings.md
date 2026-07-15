@@ -4,7 +4,7 @@ description: Append-only ledger of operator corrections — the voice memory. Re
 
 # Learnings
 
-Rules distilled from real corrections. Newest first, above the marker. Superseded rules get struck through with a pointer, never deleted. `/learn --fold` graduates stable rules into [[style-dna]] or [[banned-patterns]] quarterly.
+Rules distilled from real corrections. Newest first, above the marker. Superseded rules get struck through with a pointer, never deleted. `/learn --fold` graduates rules that held through 3+ ships into [[style-dna]] or [[banned-patterns]].
 
 Entry format:
 

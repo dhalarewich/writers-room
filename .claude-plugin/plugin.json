@@ -1,6 +1,6 @@
 {
   "name": "writers-room",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "A local-first editorial studio for one distinctive voice. Filesystem board, navigable vault, voice memory that learns from your edits.",
   "author": { "name": "Danny Halarewich" },
   "license": "MIT"
