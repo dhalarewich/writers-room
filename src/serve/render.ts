@@ -23,7 +23,7 @@ export function renderBoardHtml(studio: Studio): string {
     const items = stageCards
       .map(
         (c) => `
-      <div class="card${c.meta.needs.length ? ' blocked' : ''}">
+      <div class="card${c.meta.needs.length ? ' blocked' : ''}" draggable="true" data-id="${esc(c.meta.id)}">
         <div class="card-top"><span class="id">${esc(c.meta.id)}</span>${c.meta.score != null ? `<span class="score">${c.meta.score}</span>` : ''}<span class="gates">${gateDots(c)}</span></div>
         <div class="title">${esc(c.meta.title)}${c.meta.pinned ? ' ⚲' : ''}</div>
         <div class="meta">${esc(c.meta.channel.join(', ') || '')}${c.meta.pillar ? ` · ${esc(c.meta.pillar)}` : ''}${c.meta.needs.length ? ` · ⚠ ${esc(c.meta.needs.join(','))}` : ''}</div>
@@ -31,7 +31,7 @@ export function renderBoardHtml(studio: Studio): string {
       )
       .join('');
     return `
-    <section class="column">
+    <section class="column" data-stage="${stage}">
       <h2>${stage} <span class="count">${stageCards.length}</span></h2>
       ${items || '<div class="empty">—</div>'}
     </section>`;
@@ -39,7 +39,6 @@ export function renderBoardHtml(studio: Studio): string {
 
   return `<!doctype html>
 <html><head><meta charset="utf-8">
-<meta http-equiv="refresh" content="5">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(studio.config.name)} — Writers Room</title>
 <style>
@@ -63,9 +62,48 @@ export function renderBoardHtml(studio: Studio): string {
   .title { margin-top: 4px; }
   .meta { color: ${palette.dim}; font-size: 11px; margin-top: 4px; }
   .empty { color: ${palette.dim}; text-align: center; padding: 12px 0; }
+  .card { cursor: grab; }
+  .card.dragging { opacity: .4; }
+  .column.over { border-color: ${palette.copperBright}; background: #1c1712; }
 </style></head>
 <body>
-<header><h1>◈ ${esc(studio.config.name)}</h1><span class="sub">${cards.length} cards · refreshes every 5s · read-only</span></header>
+<header><h1>◈ ${esc(studio.config.name)}</h1><span class="sub">${cards.length} cards · drag a card to move it</span></header>
 <div class="board">${columns}</div>
+<script>
+let dragId = null, dragging = false;
+document.addEventListener('dragstart', (e) => {
+  const card = e.target.closest('.card');
+  if (!card) return;
+  dragId = card.dataset.id;
+  dragging = true;
+  card.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+});
+document.addEventListener('dragend', (e) => {
+  dragging = false;
+  const card = e.target.closest('.card');
+  if (card) card.classList.remove('dragging');
+});
+for (const col of document.querySelectorAll('.column')) {
+  col.addEventListener('dragover', (e) => { e.preventDefault(); col.classList.add('over'); });
+  col.addEventListener('dragleave', () => col.classList.remove('over'));
+  col.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    col.classList.remove('over');
+    const to = col.dataset.stage, id = dragId;
+    dragId = null;
+    if (!id || !to) return;
+    const res = await fetch('/move', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id, to }),
+    });
+    if (res.ok) location.reload();
+    else alert('move failed: ' + (await res.text()));
+  });
+}
+// Auto-refresh replaces the old meta-refresh, but never mid-drag.
+setInterval(() => { if (!dragging) location.reload(); }, 5000);
+</script>
 </body></html>`;
 }
