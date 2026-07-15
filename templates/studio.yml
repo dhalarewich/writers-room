@@ -1,0 +1,16 @@
+name: __NAME__
+prefix: __PREFIX__
+
+# Distribution channels this studio writes for.
+channels: [linkedin, x, longform]
+
+# Content pillars — exactly one per card. Rename these to your own.
+pillars: [pillar-one, pillar-two, pillar-three]
+
+# Autonomous-run thresholds (used by /write --auto).
+thresholds:
+  min_score: 72
+  max_per_run: 6
+
+# RSS feeds for /feed, grouped by topic. One URL per line.
+feeds: {}

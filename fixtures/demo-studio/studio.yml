@@ -1,0 +1,12 @@
+name: Field Notes
+prefix: fn
+
+channels: [linkedin, x, longform]
+
+pillars: [gear-truth, trail-craft, small-business]
+
+thresholds:
+  min_score: 72
+  max_per_run: 6
+
+feeds: {}

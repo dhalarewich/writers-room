@@ -1,0 +1,30 @@
+{
+  "name": "writers-room",
+  "version": "1.0.0-alpha.0",
+  "description": "A local-first editorial studio for one distinctive voice",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "wr": "./dist/cli/main.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "dev": "tsx src/cli/main.ts"
+  },
+  "dependencies": {
+    "ink": "^5.2.1",
+    "react": "^18.3.1",
+    "yaml": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.31",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}
