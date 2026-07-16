@@ -25,7 +25,9 @@ The voice part is the point. The AI drafts as you, checked against a spec distil
 
 <div align="center">
 
-<video src="https://github.com/dhalarewich/writers-room/releases/download/assets/brag.mp4" controls width="720"></video>
+
+<video src="https://github.com/user-attachments/assets/64cf034a-3675-4bfd-b2a0-10c581ff978e"></video>
+
 
 </div>
 
