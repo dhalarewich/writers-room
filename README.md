@@ -4,9 +4,9 @@
 
 <p><code>The local-first editorial studio for one distinctive voice</code></p>
 
-**Filesystem board · evidence-quoted voice spec · gates instead of a humanizer · memory mined from your own edits**
+**A kanban board for your writing · AI that drafts in your voice · quality gates before anything ships · learns from your edits**
 
-[![tests](https://img.shields.io/badge/tests-64%20passing-4c9a52)](#the-eval)
+[![tests](https://img.shields.io/badge/tests-90%20passing-4c9a52)](#the-eval)
 [![node](https://img.shields.io/badge/node-%3E%3D20-6aa84f)](package.json)
 [![version](https://img.shields.io/badge/version-1.0.0--alpha.1-c47a3d)](https://github.com/dhalarewich/writers-room/releases)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](#install)
@@ -19,11 +19,9 @@
 
 ---
 
-A Claude Code plugin plus a small CLI, running entirely on your filesystem — no server, no database, no API keys, nothing to deploy.
+Writers Room is a Claude Code plugin (plus a small `wr` CLI) for writing with AI in your own voice. Your pipeline is a kanban board of plain markdown files on your own disk: ideas land in an inbox, move through drafting and editing, pass three quality gates — facts, critique, voice — and leave as published pieces. No server, no database, no API keys.
 
-The board is folders. The cards are markdown. The voice spec is distilled from pieces you actually published, with every rule quoting its evidence. Mechanical AI tells are counted by code, not vibes. And every hand-edit you make before publishing is captured as a diff and mined back into memory — the system gets more *you* every time you correct it.
-
-**The stance:** one voice, quality over volume. Most content tooling mass-produces text, then bolts a "humanizer" on the end to sand off the slop. Writers Room never needs one, because it is built to protect a real person's voice rather than manufacture a synthetic one. If a piece doesn't read unmistakably like its author, it doesn't ship.
+The voice part is the point. The AI drafts as you, checked against a spec distilled from pieces you actually published. Mechanical AI tells are counted by code, not vibes. Every hand-edit you make before publishing is captured as a diff and mined back into memory — the system gets more *you* with every piece. Most content tools mass-produce text, then bolt a "humanizer" on the end to sand off the slop; Writers Room never needs one, because if a piece doesn't read unmistakably like its author, it doesn't ship.
 
 ## How it works
 
@@ -51,24 +49,16 @@ my-studio/
     edits/              # diffs of your hand-edits, captured at ship time
 ```
 
-**Five things worth naming before the rest makes sense.** **Channels** are where you publish — linkedin, blog, x, whatever `studio.yml` lists. **Pillars** are the 3–5 themes you actually own, strategy made countable: `/feed` hunts gaps per pillar, and the rubric scores how well a piece ladders back to one. **Vault** is ratified memory — the facts and rules you've signed off on: bio, strategy, rubric, style DNA, samples. Agents read it as truth, and it changes only on purpose, through `/setup`, a hand edit, or a graduation. **Memory** is provisional memory — the machine-written ledger, append-only, every rule citing the evidence, your words or your edit diffs, that produced it. Everything the system retains is memory; the provisional kind only earns its way into canon through evidence, time, and your sign-off — nothing drifts in silently.
+- **Channels** — where you publish: `linkedin`, `blog`, whatever `studio.yml` lists.
+- **Pillars** — the 3–5 themes you own. `/feed` hunts gaps per pillar; the rubric scores how well a piece ladders back to one.
+- **Vault** — ratified memory. Facts and rules you've signed off on: bio, strategy, rubric, style DNA, samples. Agents read it as truth; it changes only on purpose.
+- **Memory** — provisional memory. A machine-written, append-only ledger, every rule citing its evidence. Rules earn their way into the vault through ships survived and your sign-off — nothing drifts in silently.
 
-```
-   studio.yml
-   channels — where you publish       pillars — what you own (3–5 themes)
-   └ linkedin · x · longform          └ gear-truth · trail-craft · small-business
+<div align="center"><img src="assets/diagrams/anatomy.svg" alt="studio anatomy — channels and pillars meet in a card; vault and memory feed the draft" width="820"></div>
 
-                  every card = one pillar × one or more channels
-                                      │
-   vault/  ratified — canon           │        memory/  provisional — earns its way in
-   voice · bio · strategy ─────────► draft ◄───────── learnings · your edit diffs
-```
+<div align="center"><img src="assets/screenshots/board.png" alt="wr board — themed terminal render of the demo studio" width="720"></div>
 
-<div align="center">
-<img src="assets/screenshots/board.png" alt="wr board — themed terminal render of the demo studio" width="720">
-</div>
-
-A card's stage **is** its folder — there is no second copy of the truth. Each card carries the working draft plus a `## Dossier`: positioning, rubric score, a per-claim fact table, the edit log, the voice-gate report, and a `Pulled` list showing exactly which vault files each stage consulted and why. The card is the whole handoff: no hidden state, no transcript archaeology. Retrieval is a table of contents you can read (`vault/INDEX.md`), wiki-links, and lexical search — no embeddings, fully auditable.
+A card's stage **is** its folder — there is no second copy of the truth. Each card carries the working draft plus a `## Dossier`: positioning, rubric score, a per-claim fact table, the edit log, the voice-gate report, and a `Pulled` list of which vault files each stage consulted and why. Retrieval is a table of contents you can read (`vault/INDEX.md`), wiki-links, and lexical search — no embeddings, fully auditable.
 
 Six agents, decomposed by *context boundary* rather than job title — a fresh context is spent only where anchoring is the failure mode:
 
@@ -150,7 +140,7 @@ fn-0005  Buy gear for the trips you take → 5-ready/
   Editor's Bet: comments beat shares here — this reads as confession, not advice
 ```
 
-**Wednesday**, before anything ships, you open `board/5-ready/fn-0005-*.md` in your own editor and cut two sentences the Editor left in. Then `/ship fn-0005` — the recap, the one question that keeps the voice loop alive, and the result:
+**Wednesday**, before anything ships, you open `board/5-ready/fn-0005-*.md` in your own editor, cut two sentences the Editor left in, then run `/ship fn-0005` — the recap, the one question that keeps the voice loop alive, and the result:
 
 ```
 Buy gear for the trips you take · linkedin · facts/critique/voice: passed
@@ -178,14 +168,9 @@ Two hunks in that diff — the two sentences you cut.
 
 **The board flows left to right.** Every card starts in `0-inbox` and moves one column rightward until it ships. Your whole job is deciding what advances.
 
-```
-inbox → ideas →│ approved → drafting → editing → ready │→ published
-               ▲                                        ▲
-          your call:                              your call:
-        "worth drafting"                          "publish it"
-```
+<div align="center"><img src="assets/diagrams/board-flow.svg" alt="board flow — two human gates: ideas to approved, ready to published" width="820"></div>
 
-**Two of those arrows are yours alone.** Everything *between* them the pipeline drives — `/write` runs a card from `approved` through the three gates to `ready` on its own. But the two human gates never move without you: promoting `ideas → approved` ("this is worth drafting") and `ready → published` ("publish this"). `/write --auto` can cross the first when a score clears your threshold; nothing automated ever crosses the second.
+**Two of those arrows are yours alone.** Everything *between* them the pipeline drives on its own — `/write` runs a card from `approved` through the three gates to `ready`. But the two human gates never move without you — promoting `ideas → approved` and `ready → published` — and while `/write --auto` can cross the first when a score clears your threshold, nothing automated ever crosses the second.
 
 **Moving a card is its own small act** — separate from the work a stage does. Three ways, whichever's in reach:
 
@@ -213,9 +198,7 @@ From the terminal, `wr` covers everything without a model: `wr capture "thought"
 
 Try it with zero setup: `fixtures/demo-studio/` is a complete studio with a synthetic voice — `cd fixtures/demo-studio && wr studio`. The same board in the web view (`wr serve`, loads in Claude Code desktop's browser pane):
 
-<div align="center">
-<img src="assets/screenshots/web-board.png" alt="wr serve — the web board in the field-station theme" width="860">
-</div>
+<div align="center"><img src="assets/screenshots/web-board.png" alt="wr serve — the web board in the field-station theme" width="860"></div>
 
 ## Getting things in
 
@@ -231,15 +214,13 @@ Run it once inside a studio with `--set-default` and captures from anywhere land
 wr capture --set-default
 ```
 
-It reads stdin too, so anything that can pipe text can capture:
+It also reads stdin, and can carry its source along:
 
 ```bash
+# anything that can pipe text can capture
 pbpaste | wr capture -
-```
 
-`--url` appends a link as its own trailing paragraph, so a capture keeps its source:
-
-```bash
+# --url appends the link as its own trailing paragraph
 wr capture "the repair math cuts both ways" --url https://example.com/thread
 ```
 

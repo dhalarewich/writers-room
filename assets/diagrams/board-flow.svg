@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 220" role="img" aria-label="Board flow: seven stages from inbox to published. Two human-gate arrows, bright copper — ideas to approved (worth drafting) and ready to published (ship) — bracket a pipeline that runs the rest on its own.">
+<rect x="0" y="0" width="860" height="220" rx="12" ry="12" fill="#141210"/>
+<line x1="120" y1="81" x2="135.0" y2="81.0" stroke="#8a7f70" stroke-width="1"/>
+<polygon points="143,81 135.0,85.0 135.0,77.0" fill="#8a7f70"/>
+<line x1="223" y1="81" x2="238.0" y2="81.0" stroke="#e09a5a" stroke-width="2"/>
+<polygon points="246,81 238.0,85.0 238.0,77.0" fill="#e09a5a"/>
+<text x="234.5" y="42" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="11" fill="#e09a5a" text-anchor="middle">your call</text>
+<text x="234.5" y="122" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="11" fill="#e09a5a" text-anchor="middle">worth drafting?</text>
+<line x1="346" y1="81" x2="361.0" y2="81.0" stroke="#8a7f70" stroke-width="1"/>
+<polygon points="369,81 361.0,85.0 361.0,77.0" fill="#8a7f70"/>
+<line x1="469" y1="81" x2="484.0" y2="81.0" stroke="#8a7f70" stroke-width="1"/>
+<polygon points="492,81 484.0,85.0 484.0,77.0" fill="#8a7f70"/>
+<line x1="584" y1="81" x2="599.0" y2="81.0" stroke="#8a7f70" stroke-width="1"/>
+<polygon points="607,81 599.0,85.0 599.0,77.0" fill="#8a7f70"/>
+<line x1="687" y1="81" x2="702.0" y2="81.0" stroke="#e09a5a" stroke-width="2"/>
+<polygon points="710,81 702.0,85.0 702.0,77.0" fill="#e09a5a"/>
+<text x="698.5" y="42" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="11" fill="#e09a5a" text-anchor="middle">your call</text>
+<text x="698.5" y="122" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="11" fill="#e09a5a" text-anchor="middle">/ship</text>
+<rect x="40" y="60" width="80" height="42" rx="8" ry="8" fill="#1d1a17" stroke="#2a251f" stroke-width="1"/>
+<text x="80" y="86" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#e8e0d4" text-anchor="middle">0 inbox</text>
+<rect x="143" y="60" width="80" height="42" rx="8" ry="8" fill="#1d1a17" stroke="#2a251f" stroke-width="1"/>
+<text x="183" y="86" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#e8e0d4" text-anchor="middle">1 ideas</text>
+<rect x="246" y="60" width="100" height="42" rx="8" ry="8" fill="#1d1a17" stroke="#2a251f" stroke-width="1"/>
+<text x="296" y="86" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#e8e0d4" text-anchor="middle">2 approved</text>
+<rect x="369" y="60" width="100" height="42" rx="8" ry="8" fill="#1d1a17" stroke="#2a251f" stroke-width="1"/>
+<text x="419" y="86" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#e8e0d4" text-anchor="middle">3 drafting</text>
+<rect x="492" y="60" width="92" height="42" rx="8" ry="8" fill="#1d1a17" stroke="#2a251f" stroke-width="1"/>
+<text x="538" y="86" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#e8e0d4" text-anchor="middle">4 editing</text>
+<rect x="607" y="60" width="80" height="42" rx="8" ry="8" fill="#1d1a17" stroke="#2a251f" stroke-width="1"/>
+<text x="647" y="86" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#e8e0d4" text-anchor="middle">5 ready</text>
+<rect x="710" y="60" width="110" height="42" rx="8" ry="8" fill="#1d1a17" stroke="#7d9c6a" stroke-width="1"/>
+<text x="765" y="86" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="13" fill="#e8e0d4" text-anchor="middle">6 published</text>
+<line x1="246" y1="150" x2="687" y2="150" stroke="#8a7f70" stroke-width="1"/>
+<line x1="246" y1="144" x2="246" y2="150" stroke="#8a7f70" stroke-width="1"/>
+<line x1="687" y1="144" x2="687" y2="150" stroke="#8a7f70" stroke-width="1"/>
+<text x="466.5" y="172" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="11" fill="#8a7f70" text-anchor="middle">the pipeline drives everything between the two gates (/write)</text>
+</svg>
