@@ -2,8 +2,6 @@
 
 <img src="assets/wordmark.svg" alt="Writers Room" width="416">
 
-<p><code>The local-first editorial studio for one distinctive voice</code></p>
-
 # AI-assisted writing that actually sounds like you.
 
 **Writers Room is a local-first editorial studio that turns rough ideas into researched, fact-checked, edited drafts and learns from every change you make.**
