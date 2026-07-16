@@ -23,6 +23,12 @@ Writers Room is a Claude Code plugin (plus a small `wr` CLI) for writing with AI
 
 The voice part is the point. The AI drafts as you, checked against a spec distilled from pieces you actually published. Mechanical AI tells are counted by code, not vibes. Every hand-edit you make before publishing is captured as a diff and mined back into memory — the system gets more *you* with every piece. Most content tools mass-produce text, then bolt a "humanizer" on the end to sand off the slop; Writers Room never needs one, because if a piece doesn't read unmistakably like its author, it doesn't ship.
 
+<div align="center">
+
+<video src="https://github.com/dhalarewich/writers-room/releases/download/assets/brag.mp4" controls width="720"></video>
+
+</div>
+
 ## How it works
 
 A **studio** is a folder you own. Each project folder is its own independent board:
@@ -55,8 +61,6 @@ my-studio/
 - **Memory** — provisional memory. A machine-written, append-only ledger, every rule citing its evidence. Rules earn their way into the vault through ships survived and your sign-off — nothing drifts in silently.
 
 <div align="center"><img src="assets/diagrams/anatomy.svg" alt="studio anatomy — channels and pillars meet in a card; vault and memory feed the draft" width="820"></div>
-
-<div align="center"><img src="assets/screenshots/board.png" alt="wr board — themed terminal render of the demo studio" width="720"></div>
 
 A card's stage **is** its folder — there is no second copy of the truth. Each card carries the working draft plus a `## Dossier`: positioning, rubric score, a per-claim fact table, the edit log, the voice-gate report, and a `Pulled` list of which vault files each stage consulted and why. Retrieval is a table of contents you can read (`vault/INDEX.md`), wiki-links, and lexical search — no embeddings, fully auditable.
 
@@ -163,6 +167,8 @@ Two hunks in that diff — the two sentences you cut.
 1 diff mined, 1 rule appended:
 "Cut the hedge before the numbers — the confession lands harder cold."
 ```
+
+<div align="center"><img src="assets/screenshots/board.png" alt="wr board — themed terminal render of the demo studio" width="720"></div>
 
 ## Daily use
 
