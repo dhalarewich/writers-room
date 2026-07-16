@@ -4,7 +4,7 @@
 
 # AI-assisted writing that actually sounds like you.
 
-**Writers Room is a local-first editorial studio that turns rough ideas into researched, fact-checked, edited drafts and learns from every change you make.**
+**Writers Room is a local-first editorial studio that turns rough ideas into researched, edited drafts with independent fact, critique, and voice checks, then learns from every change you make.**
 
 [![tests](https://img.shields.io/badge/tests-90%20passing-4c9a52)](#the-eval)
 [![node](https://img.shields.io/badge/node-%3E%3D20-6aa84f)](package.json)
@@ -13,7 +13,7 @@
 [![Codex](https://img.shields.io/badge/Codex-planned-8a7f70)](#hosts)
 [![license](https://img.shields.io/badge/license-MIT-3d7dc4)](LICENSE)
 
-[Try it](#try-it-in-two-minutes) · [Why it's different](#why-its-different) · [Install](#install) · [Set up](#set-up-your-first-studio) · [A week with it](#a-week-with-it) · [Under the hood](#under-the-hood) · [Eval](#the-eval)
+[Explore the demo](#explore-the-demo-studio-in-two-minutes) · [Why it's different](#why-its-different) · [Install](#install) · [Set up](#set-up-your-first-studio) · [A week with it](#a-week-with-it) · [Under the hood](#under-the-hood) · [Eval](#the-eval)
 
 </div>
 
@@ -21,7 +21,7 @@
 
 **For people who publish under their own name and already use AI assistants.** Built for [Claude Code](https://claude.com/claude-code). Plain Markdown files on your own disk. No hosted backend.
 
-Most content tools mass-produce text, then bolt a "humanizer" on the end to sand off the slop. Writers Room works the other way around: the AI drafts *as you*, checked against a voice spec distilled from pieces you actually published, and every hand-edit you make before publishing is captured as a diff and mined back into memory. The system gets more *you* with every piece. If a draft doesn't read unmistakably like its author, it doesn't ship.
+Most content tools mass-produce text, then bolt a "humanizer" on the end to sand off the slop. Writers Room works the other way around: the AI drafts in your voice, checked against a voice spec distilled from pieces you actually published, and every hand-edit you make before publishing is captured as a diff and mined back into memory. Every piece teaches it more about how you actually write. If a draft doesn't read unmistakably like its author, it doesn't ship.
 
 - **It learns from what you change, not just what you upload.** The difference between its draft and your published piece becomes evidence for the next one.
 - **Grounded in writing that genuinely sounds like you.** Every voice rule quotes one of your real samples: no sample line, no rule.
@@ -33,9 +33,11 @@ Most content tools mass-produce text, then bolt a "humanizer" on the end to sand
 
 <video src="https://github.com/user-attachments/assets/64cf034a-3675-4bfd-b2a0-10c581ff978e"></video>
 
+*From rough idea to checked draft, human edit, and a new voice rule in 60 seconds.*
+
 </div>
 
-## Try it in two minutes
+## Explore the demo studio in two minutes
 
 A complete synthetic studio ships in the repo. No voice setup, no interview.
 
@@ -57,7 +59,7 @@ The final diff between its draft and your published piece becomes evidence for f
 `/muse` turns a half-formed thought into a finished piece through dialogue, and by default every sentence in that piece is one you actually said, quarried from the conversation and reordered rather than paraphrased. Writing *with* the AI instead of sitting back to approve its guesses is the most natural anti-slop pattern there is.
 
 **Voice rules are auditable.**
-Every rule points back to a real sample, edit, or correction. Nothing silently drifts into your profile; rules earn their way into the ratified spec through ships survived and your sign-off.
+Every rule points back to a real sample, edit, or correction. Nothing silently changes your voice profile. A rule only becomes permanent after it holds up across multiple published pieces and you approve it.
 
 **Quality checks are independent.**
 Fact, critique, and voice reviews run in fresh contexts, outside the one that wrote the draft. Mechanical AI tells are counted by code, not vibes.
@@ -79,13 +81,19 @@ Add the plugin in Claude Code:
 /plugin install writers-room@dhalarewich
 ```
 
-Then install the `wr` CLI, the deterministic substrate the agents drive:
+Then install the `wr` CLI, which manages the local board, files, and deterministic checks:
 
 ```bash
 npm i -g @dhalarewich/writers-room
 ```
 
 `wr --help` lists the verbs. (To hack on the CLI itself, clone the repo and run `npm install && npm run build && npm link` instead.)
+
+## Models and usage
+
+Writers Room prioritizes independent checks over token efficiency. A normal `/write` run uses six model contexts per card: two Fact-Checker passes plus the Writer, Editor, Critic, and Warden. By default, the five fact/draft/edit/voice calls use Opus and the Critic uses Sonnet. `/feed` uses three Sonnet contexts.
+
+Expect meaningful Claude Code usage for a full write. Model assignments are just the `model:` lines in `agents/*.md`; change them if you want a lighter setup. You can also run `wr eval` against the solo workflow and use fewer contexts if it performs as well for your voice.
 
 ## Set up your first studio
 
@@ -102,7 +110,7 @@ Then open Claude Code in that folder and run **`/setup`**. Bring 3–8 pieces yo
 - asks "what has AI gotten wrong about you before?" and turns every answer into a Fact-Checker guardrail;
 - fills strategy (north star, audiences, what counts as a winner) and the scoring rubric.
 
-It takes 15–20 minutes and is fully resumable. **`wr doctor`** shows what's seeded and what's still template, so you can stop anytime and pick up later. The router refuses to ghostwrite on an unseeded studio.
+It takes 15–20 minutes and is fully resumable. **`wr doctor`** shows what's seeded and what's still template, so you can stop anytime and pick up later. Writers Room will not draft in your name until voice setup is complete.
 
 **Second board?** Every folder is its own studio. `/setup --from ~/writing/first-studio` carries your voice (style DNA, bans, samples, bio) over in two minutes; pillars, strategy, and feeds stay per-board.
 
@@ -258,7 +266,7 @@ my-studio/
 - **Channels**: where you publish. `linkedin`, `blog`, whatever `studio.yml` lists.
 - **Pillars**: the 3–5 themes you own. `/feed` hunts gaps per pillar; the rubric scores how well a piece ladders back to one.
 - **Vault**: ratified memory. Facts and rules you've signed off on: bio, strategy, rubric, style DNA, samples. Agents read it as truth; it changes only on purpose.
-- **Memory**: provisional memory. A machine-written, append-only ledger, every rule citing its evidence. Rules earn their way into the vault through ships survived and your sign-off. Nothing drifts in silently.
+- **Memory**: provisional memory. A machine-written, append-only ledger, every rule citing its evidence. Rules move into the vault only after they hold up across published pieces and you sign off. Nothing drifts in silently.
 
 <div align="center"><img src="assets/diagrams/anatomy.svg" alt="studio anatomy: channels and pillars meet in a card; vault and memory feed the draft" width="820"></div>
 
